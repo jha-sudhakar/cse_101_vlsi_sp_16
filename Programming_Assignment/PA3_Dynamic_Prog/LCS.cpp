@@ -10,9 +10,11 @@
 
 #include "LCS.hpp"
 
-std::string lcs(std::string s1, std::string s2){
-    // TODO
-    return "";
+std::string lcs(std::string s1, std::string s2)
+{
+
+
+
 }
 
 #endif
