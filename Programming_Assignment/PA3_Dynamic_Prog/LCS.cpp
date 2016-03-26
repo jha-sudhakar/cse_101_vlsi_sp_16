@@ -5,54 +5,59 @@
 // Sources of Help: TODO
 // Due: February 19th, 2016 at 11:59 PM
 
+#include <assert.h>
+#include <vector>
+#include <string>
+using namespace std;
+
 #ifndef __LCS_CPP__
 #define __LCS_CPP__
 
 #include "LCS.hpp"
-
-std::string lcs(std::string s1, std::string s2)
-{
-lcs obj1;
-obj1.get_input(s1, s2);
-unsigned int l = bj1.lcs_length();
-
-cout<<"The LCS is: "; cout<<"'";
-
-if(l > 0)
-	cout<< obj1.print_lcs();
-
-cout<<"'" << endl;
-}
-
 #endif
 
-class lcs
+class Lcs
 {
 	private:
 		string str1, str2;
+		vector<char> Lcs_str;
 		int M, N, min;
 		unsigned int** table;
 		unsigned int* path;
+		void set_max(unsigned int i, unsigned j, int& index);
 	public:
 		void get_input(string& _s1, string& _s2);
-		int lcs_length();
-		string print_length();
+		int Lcs_length();
+		void build_Lcs(unsigned int i, unsigned int j);
+		string print_Lcs();
 		void create_table();
 		void delete_table();
+		string return_LCS(string&s1, string& s2);
 };
 
-void lcs::get_input(string& _s1, string& _s2)
+string Lcs::print_Lcs()
+{
+	string buf;buf.resize(Lcs_str.size());
+	for(int i=0; i<Lcs_str.size(); i++)
+	{
+		buf[i] = Lcs_str[Lcs_str.size()-1-i];
+	}
+	return buf;
+}
+
+void Lcs::get_input(string& _s1, string& _s2)
 {
 	str1.clear();
 	str2.clear();
+	Lcs_str.clear();
 	str1 = _s1;
 	str2 = _s2;
 }
 
-void lcs::create_table()
+void Lcs::create_table()
 {
-	N = str1.size();
-	M = str2.size();
+	M = str1.size();
+	N = str2.size();
 	min = M>N?N:M;
 	table = new unsigned int* [M];
 	for(unsigned int i=0; i<M; i++)
@@ -63,7 +68,7 @@ void lcs::create_table()
 	path = new unsigned int [M>N?N:M];
 }
 
-void lcs::delete_table()
+void Lcs::delete_table()
 {
 	for(unsigned int i=0; i<M; i++)
 	{
@@ -73,7 +78,7 @@ void lcs::delete_table()
 	delete [] path; path = NULL;
 }
 
-int lcs::lcs_length()
+int Lcs::Lcs_length()
 {
 	create_table();
 	for(int i=0; i<M; i++)
@@ -108,8 +113,78 @@ int lcs::lcs_length()
 		}
 	}
 	unsigned int ret = table[M-1][N-1];
+	build_Lcs(M-1, N-1);
 	delete_table();
 	return ret;
 }
+
+void Lcs::set_max(unsigned int i, unsigned j, int& index)
+{
+	index = 0;
+	if(str1[i] == str2[j])
+	{
+		index = 1;
+	} else
+	{
+		if(table[i-1][j] > table[i][j-1])
+			index = 2;
+		else
+			index = 3;
+	}
+}
+
+void Lcs::build_Lcs(unsigned int i, unsigned int j)
+{
+	if(i == 0 || j == 0)
+	{
+		if(str1[i] == str2[j])
+			Lcs_str.push_back(str1[i]);
+		return;	
+	}
+
+	if((table[i-1][j-1]+1 == table[i][j]) && (str1[i] == str2[j]))
+	{
+		Lcs_str.push_back(str1[i]);
+		build_Lcs(i-1, j-1);
+	} else if(table[i-1][j-1] == table[i][j])
+	{
+		build_Lcs(i-1, j-1);
+	} else if (table[i-1][j] == table[i][j])
+	{
+		build_Lcs(i-1, j);
+	} else if(table[i][j-1] == table[i][j])
+	{
+		build_Lcs(i, j-1);
+	} else
+	{
+		assert(false);
+	}
+}
+
+string Lcs::return_LCS(string&s1, string& s2)
+{
+	if(s1.size() == 0 || s1.size() == 0)
+	{
+		cout <<"LCS len = " << 0 << endl;
+		return string("");
+	}
+
+	get_input(s1, s2);
+	unsigned int l = Lcs_length(); cout <<"LCS len = " << l << endl;
+	//cout<<"The LCS is: "; cout<<"'";
+
+	if(l > 0)
+		return print_Lcs();
+	else
+		return string("");
+}
+
+string lcs(std::string s1, std::string s2)
+{
+	Lcs obj1;;
+	return obj1.return_LCS(s1, s2);
+}
+
+//#endif
 
 

@@ -6,6 +6,7 @@
 #define __LCS_HPP__
 
 #include <string>
+using namespace std;
 
 #include "TwoD_Array.hpp"
 
