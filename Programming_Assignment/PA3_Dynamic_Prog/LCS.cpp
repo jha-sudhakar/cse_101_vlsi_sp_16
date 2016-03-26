@@ -163,12 +163,13 @@ void Lcs::build_Lcs(unsigned int i, unsigned int j)
 
 string Lcs::return_LCS(string&s1, string& s2)
 {
-	if(s1.size() == 0 || s1.size() == 0)
+	if(s1.size() == 0 || s2.size() == 0)
 	{
 		cout <<"LCS len = " << 0 << endl;
 		return string("");
 	}
 
+	cout<<"size1= " << s1.size() <<", size2= " << s2.size() << endl;
 	get_input(s1, s2);
 	unsigned int l = Lcs_length(); cout <<"LCS len = " << l << endl;
 	//cout<<"The LCS is: "; cout<<"'";
